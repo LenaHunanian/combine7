@@ -6,19 +6,17 @@ class ButtonViewModel {
    
     var pressCount = 0
     var cancellable: AnyCancellable?
+    var cancellables = Set<AnyCancellable>()
 
     init() {
-           
-           cancellable = buttonPressed
+           buttonPressed
                .sink { [weak self] _ in
                    guard let self = self else { return }
                    self.pressCount += 1
                    print("Button pressed \(self.pressCount) times")
                }
+               .store(in: &cancellables)
        }
-    deinit {
-        cancellable?.cancel()
-    }
 }
 
 let vm = ButtonViewModel()
